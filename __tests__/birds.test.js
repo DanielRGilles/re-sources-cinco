@@ -24,7 +24,7 @@ describe('tests for the bird resource', () => {
 
   it('should be able to get an bird by id', async () => {
     const bird = await Bird.insert(testObj);
-    const res = await request(app).get(`/api/v1/bird/${bird.id}`);
+    const res = await request(app).get(`/api/v1/birds/${bird.id}`);
     expect(res.body).toEqual(bird);
   });
 
@@ -38,7 +38,7 @@ describe('tests for the bird resource', () => {
     const bird = await Bird.insert(testObj);
     
     const res = await request(app)
-      .patch(`/api/v1/bird/${bird.id}`)
+      .patch(`/api/v1/birds/${bird.id}`)
       .send(testObjTwo);
     
     const expected = { id: bird.id, name: 'Common Ostrich', species:'Struthio camelus'  };
@@ -49,7 +49,7 @@ describe('tests for the bird resource', () => {
   it('should be able to delete by id', async () => {
     const bird = await Bird.insert(testObj);
     const res = await request(app)
-      .delete(`/api/v1/bird/${bird.id}`);
+      .delete(`/api/v1/birds/${bird.id}`);
     
     expect(res.body).toEqual(bird);
     expect(await Bird.getById(bird.id)).toBeNull();
