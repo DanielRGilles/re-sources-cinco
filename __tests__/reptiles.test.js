@@ -14,7 +14,7 @@ describe('tests for the reptile resource', () => {
   });
   
   it('should be able to create a reptile', async () => {
-    const res = await Reptile.insert();
+    const res = await Reptile.insert({ name: 'American Alligator', species: 'Alligator mississippiensis' });
     expect(res).toEqual({ id: expect.any(String), name: 'American Alligator', species: 'Alligator mississippiensis' });
   });
 
@@ -25,15 +25,18 @@ describe('tests for the reptile resource', () => {
   });
 
   it('should be able to list all reptiles', async () => {
-    const res = await Reptile.insert({ name:'American Alligator', species: 'Alligator mississippiensis' });
+    await Reptile.insert({ name:'American Alligator', species: 'Alligator mississippiensis' });
     
-    expect(res.body).toEqual([{ id: expect.any(String), name: 'American Alligator', species: 'Alligator mississippiensis' }]);
+    expect(await Reptile.getAll()).toEqual([{ id: expect.any(String), name: 'American Alligator', species: 'Alligator mississippiensis' }]);
   });
+
   it('should be able to update a reptile', async () => {
     const reptile = await Reptile.insert({ name: 'American Alligator', species: 'Alligator mississippiensis' });
+    
     const res = await request(app)
       .patch(`/api/v1/reptiles/${reptile.id}`)
       .send({ name: 'American Crocodile', species: 'Crocodylus acutus' });
+    
     const expected = { id: reptile.id, name: 'American Crocodile', species: 'Crocodylus acutus' };
 
     expect(res.body).toEqual(expected);
