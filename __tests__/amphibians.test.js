@@ -17,12 +17,12 @@ describe('tests for the amphibians resource', () => {
     pool.end();
   });
   
-  it('should be able to create a amphibian', async () => {
+  it('should be able to create an amphibian', async () => {
     const res = await Amphibian.insert(testObj);
     expect(res).toEqual({ id: expect.any(String), name: 'American BullFrog', species:'Lithobates catesbeianus' });
   });
 
-  it('should be able to get a amphibians by id', async () => {
+  it('should be able to get an amphibian by id', async () => {
     const amphibians = await Amphibian.insert(testObj);
     const res = await request(app).get(`/api/v1/amphibians/${amphibians.id}`);
     expect(res.body).toEqual(amphibians);
@@ -34,7 +34,7 @@ describe('tests for the amphibians resource', () => {
     expect(await Amphibian.getAll()).toEqual([{ id: expect.any(String), name: 'American BullFrog', species:'Lithobates catesbeianus' }]);
   });
 
-  it('should be able to update a amphibians', async () => {
+  it('should be able to update an amphibian', async () => {
     const amphibians = await Amphibian.insert(testObj);
     
     const res = await request(app)

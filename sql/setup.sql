@@ -19,3 +19,9 @@ CREATE TABLE amphibians (
   name TEXT NOT NULL,
   species TEXT NOT NULL
 );
+
+CREATE TABLE birds (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  species TEXT NOT NULL
+);
