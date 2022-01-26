@@ -7,3 +7,10 @@ CREATE TABLE reptiles (
   name TEXT NOT NULL,
   species TEXT NOT NULL
 );
+
+CREATE TABLE mammals (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  species TEXT NOT NULL
+);
+
