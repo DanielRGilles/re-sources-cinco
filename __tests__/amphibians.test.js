@@ -18,40 +18,50 @@ describe('tests for the amphibians resource', () => {
   });
   
   it('should be able to create an amphibian', async () => {
-    const res = await Amphibian.insert(testObj);
-    expect(res).toEqual({ id: expect.any(String), name: 'American BullFrog', species:'Lithobates catesbeianus' });
+    const res = await request(app)
+      .post('/api/v1/amphibians')
+      .send(testObj);
+    expect(res.body).toEqual({ id: expect.any(String), name: 'American BullFrog', species:'Lithobates catesbeianus' });
   });
 
   it('should be able to get an amphibian by id', async () => {
-    const amphibians = await Amphibian.insert(testObj);
-    const res = await request(app).get(`/api/v1/amphibians/${amphibians.id}`);
-    expect(res.body).toEqual(amphibians);
+    const { body } = await request(app)
+      .post('/api/v1/amphibians')
+      .send(testObj);
+    const res = await request(app).get(`/api/v1/amphibians/${body.id}`);
+    expect(res.body).toEqual(body);
   });
 
   it('should be able to list all amphibians', async () => {
-    await Amphibian.insert(testObj);
+    await request(app)
+      .post('/api/v1/amphibians')
+      .send(testObj);
     
     expect(await Amphibian.getAll()).toEqual([{ id: expect.any(String), name: 'American BullFrog', species:'Lithobates catesbeianus' }]);
   });
 
   it('should be able to update an amphibian', async () => {
-    const amphibians = await Amphibian.insert(testObj);
+    const  { body } = await request(app)
+      .post('/api/v1/amphibians')
+      .send(testObj);
     
     const res = await request(app)
-      .patch(`/api/v1/amphibians/${amphibians.id}`)
+      .patch(`/api/v1/amphibians/${body.id}`)
       .send(testObjTwo);
     
-    const expected = { id: amphibians.id, name: 'Spotted salamander', species:'Ambystoma maculatum'  };
+    const expected = { id: body.id, name: 'Spotted salamander', species:'Ambystoma maculatum'  };
 
     expect(res.body).toEqual(expected);
-    expect(await Amphibian.getById(amphibians.id)).toEqual(expected);
+    expect(await Amphibian.getById(body.id)).toEqual(expected);
   });
   it('should be able to delete by id', async () => {
-    const amphibian = await Amphibian.insert(testObj);
+    const { body } =  await request(app)
+      .post('/api/v1/amphibians')
+      .send(testObj);
     const res = await request(app)
-      .delete(`/api/v1/amphibians/${amphibian.id}`);
+      .delete(`/api/v1/amphibians/${body.id}`);
     
-    expect(res.body).toEqual(amphibian);
-    expect(await Amphibian.getById(amphibian.id)).toBeNull();
+    expect(res.body).toEqual(body);
+    expect(await Amphibian.getById(body.id)).toBeNull();
   });
 });
