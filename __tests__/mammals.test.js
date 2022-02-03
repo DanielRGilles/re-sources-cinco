@@ -18,40 +18,50 @@ describe('tests for the mammals resource', () => {
   });
   
   it('should be able to create a mammal', async () => {
-    const res = await Mammal.insert(testObj);
-    expect(res).toEqual({ id: expect.any(String), name: 'Blue Whale', species:'Balaenoptera musculus' });
+    const res = await request(app)
+      .post('/api/v1/mammals')
+      .send(testObj);
+    expect(res.body).toEqual({ id: expect.any(String), name: 'Blue Whale', species:'Balaenoptera musculus' });
   });
 
   it('should be able to get a mammals by id', async () => {
-    const mammals = await Mammal.insert(testObj);
-    const res = await request(app).get(`/api/v1/mammals/${mammals.id}`);
-    expect(res.body).toEqual(mammals);
+    const { body }  = await request(app)
+      .post('/api/v1/mammals')
+      .send(testObj);
+    const res = await request(app).get(`/api/v1/mammals/${body.id}`);
+    expect(res.body).toEqual(body);
   });
 
   it('should be able to list all mammals', async () => {
-    await Mammal.insert(testObj);
+    await request(app)
+      .post('/api/v1/mammals')
+      .send(testObj);
     
     expect(await Mammal.getAll()).toEqual([{ id: expect.any(String), name: 'Blue Whale', species:'Balaenoptera musculus' }]);
   });
 
   it('should be able to update a mammals', async () => {
-    const mammals = await Mammal.insert(testObj);
+    const { body }  = await request(app)
+      .post('/api/v1/mammals')
+      .send(testObj);
     
     const res = await request(app)
-      .patch(`/api/v1/mammals/${mammals.id}`)
+      .patch(`/api/v1/mammals/${body.id}`)
       .send(testObjTwo);
     
-    const expected = { id: mammals.id, name: 'Orca', species:'Orcinus orca' };
+    const expected = { id: body.id, name: 'Orca', species:'Orcinus orca' };
 
     expect(res.body).toEqual(expected);
-    expect(await Mammal.getById(mammals.id)).toEqual(expected);
+    expect(await Mammal.getById(body.id)).toEqual(expected);
   });
   it('should be able to delete by id', async () => {
-    const mammal = await Mammal.insert(testObj);
+    const { body }  = await request(app)
+      .post('/api/v1/mammals')
+      .send(testObj);
     const res = await request(app)
-      .delete(`/api/v1/mammals/${mammal.id}`);
+      .delete(`/api/v1/mammals/${body.id}`);
     
-    expect(res.body).toEqual(mammal);
+    expect(res.body).toEqual(body);
     expect(await Mammal.getById(Mammal.id)).toBeNull();
   });
 });
